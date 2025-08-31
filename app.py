@@ -26,7 +26,7 @@ with col1:
     ApplicantIncome = st.slider("Applicant Income", 0, 100000, 3000, key="income", format="$%d")
     CoapplicantIncome = st.slider("Coapplicant Income", 0, 50000, 0, key="coincome", format="$%d")
     LoanAmount = st.slider("Loan Amount (in thousands)", 0, 1000, 66, key="loanamt", format="$%d")
-    Loan_Amount_Term = st.slider("Loan Amount Term (months)", 12, 480, 360)
+    Loan_Amount_Term = st.slider("Loan Amount Term (days)", 12, 480, 360)
     Property_Area = st.selectbox("Property Area", ["Urban","Semiurban","Rural"])
 
     input_data = pd.DataFrame([{
@@ -57,10 +57,16 @@ with col2:
             st.success(f"✅ Loan Approved! 🎉")
         else:
             st.error(f"❌ Loan Not Approved 😔")
-        st.info(f"Probability of Approval: **{st.session_state.proba:.2f}**")
-        
+
+        # Show probability in percentage
+        st.info(f"Probability of Approval: **{st.session_state.proba:.2%}**")
+
         # Fun visuals
         st.balloons()
-        st.progress(min(st.session_state.proba, 1.0))
+
+        # Convert probability (0–1) to percentage (0–100) for progress bar
+        progress_value = int(min(st.session_state.proba * 100, 100))
+        st.progress(progress_value)
+
     else:
         st.info("👉 Fill in the details and click 🔮 Predict to see the result!")
